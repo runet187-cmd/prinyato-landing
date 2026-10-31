@@ -320,9 +320,16 @@ footer{border-top:1px solid var(--line);padding:32px 0 112px}
 .agree{display:flex;gap:.6em;align-items:flex-start;margin:0 0 14px;font-size:.95rem;line-height:1.45;cursor:pointer}
 .agree input{margin-top:.2em;width:1.1em;height:1.1em;flex:none;accent-color:var(--accent)}
 .js-cta.is-locked{opacity:.45;cursor:not-allowed}
+.bg-fx{position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden}
+.bg-fx i{position:absolute;border-radius:50%;filter:blur(70px);opacity:.26;background:var(--accent);animation:drift 24s ease-in-out infinite alternate}
+.bg-fx i:nth-child(1){width:520px;height:520px;left:-140px;top:-160px}
+.bg-fx i:nth-child(2){width:440px;height:440px;right:-120px;top:38%;background:var(--accent-dark);animation-duration:30s;animation-delay:-8s}
+.bg-fx i:nth-child(3){width:380px;height:380px;left:30%;bottom:-170px;animation-duration:27s;animation-delay:-14s}
+@keyframes drift{from{transform:translate(0,0) scale(1)}to{transform:translate(80px,-60px) scale(1.12)}}
 </style>
 </head>
 <body>
+<div class="bg-fx" aria-hidden="true"><i></i><i></i><i></i></div>
 <header class="site">
   <div class="wrap bar">
     <a class="brand" href="#top"><picture><source srcset="assets/mascot-3d-dark-1080.png" media="(prefers-color-scheme: dark)"><img src="assets/mascot-3d-light-1080.png" width="36" height="36" alt="" data-i18n-alt="logoAlt"></picture><span data-i18n="brand"></span></a>
@@ -346,7 +353,7 @@ footer{border-top:1px solid var(--line);padding:32px 0 112px}
         <ul class="facts enter" style="--d:.65s" id="facts"></ul>
       </div>
       <div class="mascot enter" style="--d:.3s">
-        <picture><source srcset="assets/mascot-3d-dark-1080.png" media="(prefers-color-scheme: dark)"><img src="assets/mascot-3d-light-1080.png" width="1080" height="1080" alt="" data-i18n-alt="mascotAlt"></picture>
+        <picture><source srcset="assets/mascot-hero-dark.png" media="(prefers-color-scheme: dark)"><img src="assets/mascot-hero-light.png" width="900" height="900" alt="" data-i18n-alt="mascotAlt"></picture>
       </div>
     </div>
   </section>
