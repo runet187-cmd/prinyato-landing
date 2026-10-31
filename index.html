@@ -1,0 +1,449 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Claude Code Freelancer Pipeline</title>
+<meta name="description" content="">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --accent:#D66F4F;
+  --accent-dark:#B8573A;
+  --text:#252525;
+  --muted:#6E6E6E;
+  --bg:#F0F0F0;
+  --dots:#CCCCCC;
+  --card:#FFFFFF;
+  --line:#DADADA;
+  --on-accent:#FFFFFF;
+  --font:"Inter Display","Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --radius:16px;
+  --max:1120px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --text:#EDEDED;
+    --muted:#A3A3A3;
+    --bg:#1C1C1E;
+    --dots:#3A3A3C;
+    --card:#2A2A2A;
+    --line:#3A3A3C;
+    --accent:#E0805F;
+    --accent-dark:#D66F4F;
+    --on-accent:#1C1C1E;
+  }
+}
+:root[data-theme="dark"]{
+  --text:#EDEDED;--muted:#A3A3A3;--bg:#1C1C1E;--dots:#3A3A3C;--card:#2A2A2A;--line:#3A3A3C;--accent:#E0805F;--accent-dark:#D66F4F;--on-accent:#1C1C1E;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:var(--bg);color:var(--text);
+  font-family:var(--font);font-size:17px;line-height:1.55;
+  background-image:radial-gradient(var(--dots) 1px,transparent 1.2px);
+  background-size:24px 24px;
+  overflow-x:hidden;
+}
+img{max-width:100%;height:auto;display:block}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--accent);outline-offset:3px;border-radius:6px}
+.wrap{width:100%;max-width:var(--max);margin:0 auto;padding:0 16px}
+@media(min-width:720px){.wrap{padding:0 32px}}
+section{padding:56px 0}
+@media(min-width:900px){section{padding:96px 0}}
+.mono{font-family:var(--mono);font-size:13px;letter-spacing:.02em;color:var(--muted)}
+.eyebrow{font-family:var(--mono);font-size:13px;color:var(--accent);margin:0 0 12px;text-transform:uppercase;letter-spacing:.08em}
+h1,h2,h3{line-height:1.12;margin:0;letter-spacing:-.02em;font-weight:700}
+h1{font-size:clamp(34px,7vw,64px);font-weight:800}
+h2{font-size:clamp(26px,4.5vw,40px);margin-bottom:16px}
+h3{font-size:19px;letter-spacing:-.01em}
+p{margin:0}
+.lead{font-size:clamp(17px,2.4vw,20px);color:var(--muted);max-width:60ch}
+.section-head{margin-bottom:32px;max-width:720px}
+
+/* header */
+header.site{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.bar{display:flex;align-items:center;gap:8px;min-height:60px;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-weight:700;min-width:0}
+.brand img{width:36px;height:36px;border-radius:50%;flex:none}
+.brand span{font-size:14px;line-height:1.15;overflow:hidden;text-overflow:ellipsis}
+@media(min-width:560px){.brand span{font-size:16px}}
+.bar nav{display:flex;align-items:center;gap:8px;flex:none}
+.link-price{font-size:14px;font-weight:600;text-decoration:none;padding:8px 10px;border-radius:8px}
+.link-price:hover{color:var(--accent)}
+.lang{font-family:var(--mono);font-size:13px;font-weight:500;background:transparent;color:var(--text);border:1px solid var(--line);border-radius:999px;padding:7px 12px;cursor:pointer;min-height:36px}
+.lang:hover{border-color:var(--accent);color:var(--accent)}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--accent);color:var(--on-accent);font:600 17px/1 var(--font);text-decoration:none;padding:17px 28px;border-radius:999px;border:0;cursor:pointer;transition:transform .2s,background .2s,box-shadow .2s;max-width:100%;text-align:center}
+.btn:hover{background:var(--accent-dark);transform:translateY(-2px);box-shadow:0 10px 24px -10px var(--accent)}
+.btn:focus-visible{outline-color:var(--text)}
+
+/* hero */
+.hero{padding-top:40px}
+.hero-grid{display:grid;gap:32px;align-items:center}
+@media(min-width:900px){.hero-grid{grid-template-columns:1.2fr .8fr;gap:56px}}
+.hero h1{margin-bottom:20px}
+.hero .lead{margin-bottom:28px}
+.cmd{display:inline-flex;max-width:100%;align-items:center;gap:8px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:8px 12px;margin-bottom:24px;font-family:var(--mono);font-size:13px;overflow:hidden}
+.cmd b{color:var(--accent);font-weight:500}
+.cmd .typed{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.caret{display:inline-block;width:7px;height:15px;background:var(--accent);vertical-align:-2px;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.hero-note{margin-top:14px}
+.mascot{justify-self:center;width:min(78%,380px);border-radius:50%;box-shadow:0 30px 60px -30px rgba(0,0,0,.35)}
+.mascot img{border-radius:50%;width:100%;animation:float 6s ease-in-out infinite}
+@keyframes float{50%{transform:translateY(-10px)}}
+
+/* cards */
+.grid{display:grid;gap:16px}
+@media(min-width:720px){.grid.c3{grid-template-columns:repeat(3,1fr)}.grid.c2{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:900px){.grid.c5{grid-template-columns:repeat(6,1fr)}.grid.c5 .card{grid-column:span 2}.grid.c5 .card:nth-child(n+4){grid-column:span 3}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:24px;transition:transform .25s,box-shadow .25s,border-color .25s}
+.card:hover{transform:translateY(-4px);border-color:var(--accent);box-shadow:0 16px 30px -18px rgba(0,0,0,.35)}
+.card h3{margin-bottom:8px}
+.card p{color:var(--muted);font-size:16px}
+.card .mono{display:block;margin-bottom:12px;color:var(--accent)}
+
+/* steps */
+.steps{counter-reset:s;display:grid;gap:16px;padding:0;margin:0;list-style:none}
+@media(min-width:720px){.steps{grid-template-columns:repeat(3,1fr)}}
+.steps li{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:24px;position:relative;transition:transform .25s,border-color .25s}
+.steps li:hover{transform:translateY(-4px);border-color:var(--accent)}
+.steps .n{font-family:var(--mono);font-size:13px;color:var(--accent);display:block;margin-bottom:10px}
+.steps h3{margin-bottom:8px}
+.steps p{color:var(--muted);font-size:16px}
+.steps .out{margin-top:14px;display:block}
+
+/* list */
+.checks{list-style:none;margin:0;padding:0;display:grid;gap:12px}
+@media(min-width:720px){.checks{grid-template-columns:1fr 1fr}}
+.checks li{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 16px 16px 48px;position:relative;font-size:16px}
+.checks li::before{content:"";position:absolute;left:18px;top:21px;width:14px;height:8px;border-left:2px solid var(--accent);border-bottom:2px solid var(--accent);transform:rotate(-45deg)}
+.fine{margin-top:20px;max-width:70ch;font-size:15px;color:var(--muted)}
+
+/* price */
+.price-box{background:var(--card);border:1px solid var(--line);border-radius:24px;padding:32px 20px;text-align:center;max-width:640px;margin:0 auto}
+@media(min-width:720px){.price-box{padding:48px}}
+.price-row{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:center;gap:8px 16px;margin:20px 0 8px}
+.price-now{font-size:clamp(48px,12vw,72px);font-weight:800;letter-spacing:-.03em;line-height:1}
+.price-old{font-size:24px;color:var(--muted);text-decoration:line-through}
+.badge{display:inline-block;font-family:var(--mono);font-size:13px;color:var(--accent);border:1px solid var(--accent);border-radius:999px;padding:4px 12px;margin-bottom:24px}
+.price-box ul{list-style:none;padding:0;margin:0 0 28px;color:var(--muted);font-size:16px}
+.price-box .mono{display:block;margin-top:16px}
+
+/* for whom */
+.who h3{margin-bottom:10px}
+
+/* faq */
+.faq{max-width:760px}
+details{background:var(--card);border:1px solid var(--line);border-radius:12px;margin-bottom:12px;transition:border-color .2s}
+details:hover,details[open]{border-color:var(--accent)}
+summary{cursor:pointer;list-style:none;padding:18px 48px 18px 20px;font-weight:600;position:relative}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";position:absolute;right:20px;top:50%;transform:translateY(-50%);font-family:var(--mono);color:var(--accent);font-size:20px}
+details[open] summary::after{content:"−"}
+details p{padding:0 20px 18px;color:var(--muted);font-size:16px}
+
+/* footer */
+footer{border-top:1px solid var(--line);padding:32px 0 48px}
+.foot{display:flex;flex-wrap:wrap;gap:12px 24px;justify-content:space-between;align-items:center}
+.foot strong{font-weight:700}
+
+/* motion */
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .7s ease,transform .7s ease;transition-delay:var(--d,0s)}
+.reveal.in{opacity:1;transform:none}
+.enter{animation:enter .8s cubic-bezier(.2,.7,.2,1) both;animation-delay:var(--d,0s)}
+@keyframes enter{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+  .reveal{opacity:1;transform:none}
+  .card:hover,.steps li:hover,.btn:hover{transform:none}
+}
+</style>
+</head>
+<body>
+<header class="site">
+  <div class="wrap bar">
+    <a class="brand" href="#top"><picture><source srcset="assets/mascot-3d-dark-1080.png" media="(prefers-color-scheme: dark)"><img src="assets/mascot-3d-light-1080.png" width="36" height="36" alt="" data-i18n-alt="logoAlt"></picture><span data-i18n="brand"></span></a>
+    <nav aria-label="Main">
+      <a class="link-price" href="#price" data-i18n="navPrice"></a>
+      <button class="lang" id="lang" type="button" aria-label="Language"></button>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <div class="cmd enter" style="--d:.05s" aria-hidden="true"><b>$</b><span class="typed" id="typed"></span><span class="caret"></span></div>
+        <h1 class="enter" style="--d:.15s" data-i18n="heroTitle"></h1>
+        <p class="lead enter" style="--d:.3s" data-i18n="heroSub"></p>
+        <div class="enter" style="--d:.45s"><a class="btn js-cta" data-i18n="cta" target="_blank" rel="noopener" href="#"></a></div>
+        <p class="mono hero-note enter" style="--d:.55s" data-i18n="heroNote"></p>
+      </div>
+      <div class="mascot enter" style="--d:.3s">
+        <picture><source srcset="assets/mascot-3d-dark-1080.png" media="(prefers-color-scheme: dark)"><img src="assets/mascot-3d-light-1080.png" width="1080" height="1080" alt="" data-i18n-alt="mascotAlt"></picture>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="pain-h">
+    <div class="wrap">
+      <div class="section-head reveal"><p class="eyebrow" data-i18n="painEyebrow"></p><h2 id="pain-h" data-i18n="painTitle"></h2><p class="lead" data-i18n="painLead"></p></div>
+      <div class="grid c3" id="pain"></div>
+    </div>
+  </section>
+
+  <section aria-labelledby="in-h">
+    <div class="wrap">
+      <div class="section-head reveal"><p class="eyebrow" data-i18n="inEyebrow"></p><h2 id="in-h" data-i18n="inTitle"></h2><p class="lead" data-i18n="inLead"></p></div>
+      <div class="grid c5" id="features"></div>
+    </div>
+  </section>
+
+  <section aria-labelledby="how-h">
+    <div class="wrap">
+      <div class="section-head reveal"><p class="eyebrow" data-i18n="howEyebrow"></p><h2 id="how-h" data-i18n="howTitle"></h2><p class="lead" data-i18n="howLead"></p></div>
+      <ol class="steps" id="steps"></ol>
+    </div>
+  </section>
+
+  <section aria-labelledby="get-h">
+    <div class="wrap">
+      <div class="section-head reveal"><p class="eyebrow" data-i18n="getEyebrow"></p><h2 id="get-h" data-i18n="getTitle"></h2></div>
+      <ul class="checks reveal" id="get"></ul>
+      <p class="fine reveal" data-i18n="getNote"></p>
+    </div>
+  </section>
+
+  <section aria-labelledby="who-h">
+    <div class="wrap">
+      <div class="section-head reveal"><p class="eyebrow" data-i18n="whoEyebrow"></p><h2 id="who-h" data-i18n="whoTitle"></h2></div>
+      <div class="grid c3 who" id="who"></div>
+    </div>
+  </section>
+
+  <section id="price" aria-labelledby="price-h">
+    <div class="wrap">
+      <div class="price-box reveal">
+        <p class="eyebrow" data-i18n="priceEyebrow"></p>
+        <h2 id="price-h" data-i18n="priceTitle"></h2>
+        <div class="price-row"><span class="price-now" data-i18n="priceNow"></span><span class="price-old" data-i18n="priceOld"></span></div>
+        <span class="badge" data-i18n="priceBadge"></span>
+        <ul id="priceList"></ul>
+        <a class="btn js-cta" data-i18n="cta" target="_blank" rel="noopener" href="#"></a>
+        <span class="mono" data-i18n="priceNote"></span>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="faq-h">
+    <div class="wrap">
+      <div class="section-head reveal"><p class="eyebrow" data-i18n="faqEyebrow"></p><h2 id="faq-h" data-i18n="faqTitle"></h2></div>
+      <div class="faq reveal" id="faq"></div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <span><strong data-i18n="brand"></strong> <span class="mono" data-i18n="footVersion"></span></span>
+    <span class="mono"><span data-i18n="footAccount"></span> @prinyato.ai</span>
+  </div>
+</footer>
+
+<script>
+/* Payment link: YooKassa payment link created in the merchant dashboard. */
+const PAYMENT_URL = "https://yookassa.ru/my/i/auIGsmZgEPu8/l";
+
+const I18N = {
+ru: {
+  htmlLang:"ru", pageTitle:"Claude Code Freelancer Pipeline",
+  metaDesc:"Набор для Claude Code: заказ идёт по понятному порядку от первого сообщения клиента до проверенной сдачи, с документом на каждом шаге.",
+  brand:"Claude Code Freelancer Pipeline", logoAlt:"Логотип: горшок с ростком", mascotAlt:"Маскот: 3D-горшок с зелёным ростком",
+  navPrice:"Цена", langBtn:"EN", langLabel:"Switch to English",
+  typed:"/intake → /plan-delivery → /qa-gate",
+  heroTitle:"Заказ сделан, проверен и сдан по порядку, без хаоса",
+  heroSub:"Это набор для Claude Code — ИИ-помощника, который работает на твоём компьютере и делает задачи по тексту команд. Он ведёт заказ по пяти шагам, от сообщения клиента до сдачи, и на каждом шаге оставляет понятный документ: что просили, что сделано, что проверено.",
+  cta:"Получить набор в Telegram", heroNote:"Руководство и комплект файлов, версия 1.0. Дохода набор не обещает.",
+  painEyebrow:"Знакомо?", painTitle:"Хаос в заказе обычно случается до работы и после неё",
+  painLead:"Три места, где заказы чаще всего идут вкривь:",
+  pain:[
+    {t:"Непонятно, чего хочет клиент", p:"Клиент пишет «нужен лендинг (сайт из одной страницы), бюджет небольшой, нужно за неделю». Ты угадываешь, что он имел в виду, а потом переделываешь."},
+    {t:"«Готово», но проверить нечем", p:"ИИ говорит, что всё работает, а доказательств нет. И спор «о чём мы договаривались» нечем разрешить."},
+    {t:"Пароли и ключи не там, где нужно", p:"Ключи доступа к сервисам случайно попадают в чат или в папку с кодом, которую видят другие."}
+  ],
+  inEyebrow:"Что внутри", inTitle:"Порядок работы, проверка и защита в одной папке",
+  inLead:"Копируешь файлы в свой проект и запускаешь Claude Code. Дальше он работает по этим правилам.",
+  features:[
+    {m:"3 команды", t:"Три команды для трёх шагов", p:"/intake превращает сообщение клиента в бриф (короткое описание задачи) с вопросами и пунктами приёмки. /plan-delivery делает план, список рисков и расходов. /qa-gate проверяет работу перед сдачей."},
+    {m:"1 проверяющий", t:"Отдельная проверка безопасности", p:"Помощник security-reviewer только читает код, ничего не меняет, и ищет утечки паролей, лазейки для взлома и места, где не проверяются права доступа."},
+    {m:"6 хуков", t:"Защита, которая не забывает", p:"Хуки — маленькие программы-предохранители. Они не дают выполнить опасную команду, править файл с паролями, записать ключ в файл или сообщение и сдать работу без отчёта о проверке. Это не просьба к ИИ, а блокировка."},
+    {m:"6 шаблонов", t:"Документы, которые можно показать клиенту", p:"Бриф, критерии приёмки (по чему клиент примет работу), план проверки, документ сдачи проекта, предложение с оценкой и запрос на изменение."},
+    {m:"3 надстройки", t:"Под тип заказа", p:"Дополнительные правила и скрипты проверки для сайтов-лендингов, автоматизаций и работы с данными. Подключаются по желанию."}
+  ],
+  howEyebrow:"Как это работает", howTitle:"Бриф, план, проверка",
+  howLead:"Всего пять этапов: разобрать заказ, составить план, сделать, проверить, передать клиенту. Три главных шага выглядят так.",
+  steps:[
+    {n:"Шаг 1 · /intake", t:"Бриф", p:"Ты отдаёшь сообщение клиента как есть. В ответ получаешь вопросы клиенту и пронумерованные пункты, по которым работу примут. Всё, чего не знаешь, записывается как предположение, а не как факт.", o:"docs/brief.md"},
+    {n:"Шаг 2 · /plan-delivery", t:"План", p:"По утверждённому брифу Claude составляет план: этапы, риски, регулярные расходы. Потом останавливается и ждёт, пока ты его утвердишь.", o:"docs/plan.md"},
+    {n:"Шаг 3 · /qa-gate", t:"Проверка перед сдачей", p:"Каждый пункт получает отметку с доказательством: пройдено, провалено или не проверено. Итог: READY (готово), READY WITH CAVEATS (готово с оговорками) или NOT READY (не готово).", o:"docs/qa-report.md"}
+  ],
+  getEyebrow:"Сразу после покупки", getTitle:"Что ты получаешь",
+  get:[
+    "Папка .claude/ с правилами проекта, настройками, тремя командами, проверяющим помощником и хуками-предохранителями",
+    "Папка templates/ с шестью шаблонами документов",
+    "Папка packs/ с тремя надстройками, чек-листами, скриптами проверки и тестами",
+    "Руководство на 74 страницы: установка, шпаргалка на одну страницу, ответы на вопросы",
+    "Полный разбор примера: лендинг студии йоги от заказа до итогового вердикта",
+    "Лицензия: использование в своих проектах, личных и коммерческих"
+  ],
+  getNote:"Доступ к самому Claude Code в набор не входит, его оформляют отдельно. Для хуков нужна программа Python 3. Перепродажа набора запрещена.",
+  whoEyebrow:"Для кого", whoTitle:"Кому это пригодится",
+  who:[
+    {t:"Фрилансерам", p:"Берёшь платные заказы и хочешь, чтобы каждый шёл по одному порядку. Клиент получает бриф, план, отчёт о проверке и документ сдачи, а спор «о чём мы договаривались» решается документом."},
+    {t:"Разработчикам", p:"Уже работаешь с Claude Code и хочешь, чтобы правила и защита выполнялись скриптами, а не уговорами модели. Команды не привязаны к стеку, шаблоны можно править."},
+    {t:"Тем, кто не пишет код", p:"Бриф, план и отчёт — обычные документы, их можно читать без знания кода. Но набор работает внутри Claude Code, и ставить его нужно самому. Если ты ни разу его не запускал, сейчас набор для тебя рановат."}
+  ],
+  priceEyebrow:"Цена", priceTitle:"Один набор, одна цена",
+  priceNow:"990 ₽", priceOld:"1500 ₽", priceBadge:"Скидка на ограниченное время",
+  priceList:["Все файлы комплекта и руководство","Использование в своих проектах","Один вариант, без тарифов"],
+  priceNote:"Оплата и условия — в Telegram-боте",
+  faqEyebrow:"Вопросы", faqTitle:"Частые вопросы",
+  faq:[
+    {q:"Нужен ли мне Claude Code?", a:"Да. Это ИИ-помощник, который работает на твоём компьютере, и набор работает только внутри него. Доступ или подписка оформляются отдельно. Для хуков нужна ещё программа Python 3."},
+    {q:"Можно ли использовать набор в коммерческих проектах?", a:"Да, в своих проектах. Перепродавать сам набор нельзя."},
+    {q:"Подойдёт ли это для заказов без кода?", a:"Разбор заказа, план и сдача подходят для любых проектов. Проверка лучше всего работает там, где результат можно проверить."},
+    {q:"Можно ли подстроить набор под себя?", a:"Да. Команды не привязаны к конкретным языкам и инструментам: можно добавить свои в файл CLAUDE.md (правила проекта) и поправить шаблоны."},
+    {q:"Это ИИ, который сам сделает весь проект?", a:"Нет. План и приёмку утверждаешь ты и клиент. Claude предлагает, проверяет и записывает. Набор не обещает дохода: он помогает сделать работу понятной, повторяемой и проверяемой, и только если тебе подходит такая манера работы."}
+  ],
+  footVersion:"· Руководство и комплект файлов, версия 1.0", footAccount:"Аккаунт:"
+},
+en: {
+  htmlLang:"en", pageTitle:"Claude Code Freelancer Pipeline",
+  metaDesc:"A kit for Claude Code: an order follows a clear routine from the client's first message to a verified handover, with a document at every step.",
+  brand:"Claude Code Freelancer Pipeline", logoAlt:"Logo: a pot with a sprout", mascotAlt:"Mascot: a 3D pot with a green sprout",
+  navPrice:"Price", langBtn:"RU", langLabel:"Переключить на русский",
+  typed:"/intake → /plan-delivery → /qa-gate",
+  heroTitle:"An order done, checked and handed over in order, with no chaos",
+  heroSub:"This is a kit for Claude Code, an AI assistant that runs on your computer and does tasks from typed commands. It takes an order through five steps, from the client's message to handover, and leaves a clear document at each step: what was asked, what was done, what was checked.",
+  cta:"Get the kit on Telegram", heroNote:"Guide and file kit, version 1.0. The kit does not promise income.",
+  painEyebrow:"Sound familiar?", painTitle:"Chaos in an order usually happens before the work and after it",
+  painLead:"Three places where orders most often go wrong:",
+  pain:[
+    {t:"It is unclear what the client wants", p:"The client writes \"need a landing page (a one-page site), small budget, within a week\". You guess what they meant, then redo the work."},
+    {t:"\"Done\", but nothing to check it against", p:"The AI says everything works, but there is no proof. And the \"what did we agree on\" argument has no document to settle it."},
+    {t:"Passwords and keys in the wrong place", p:"Access keys to services accidentally end up in a chat or in a project folder that others can see."}
+  ],
+  inEyebrow:"What's inside", inTitle:"A routine, checks and protection in one folder",
+  inLead:"Copy the files into your project and start Claude Code. From then on it works by these rules.",
+  features:[
+    {m:"3 commands", t:"Three commands for three steps", p:"/intake turns the client's message into a brief (a short description of the task) with questions and acceptance points. /plan-delivery makes a plan, a list of risks and costs. /qa-gate checks the work before handover."},
+    {m:"1 reviewer", t:"A separate security check", p:"The security-reviewer helper only reads code, changes nothing, and looks for leaked passwords, openings for attackers and places where access rights are not checked."},
+    {m:"6 hooks", t:"Protection that does not forget", p:"Hooks are small safety-catch programs. They stop a dangerous command, edits to the password file, a key written into a file or message, and handover without a check report. This is not a request to the AI, it is a block."},
+    {m:"6 templates", t:"Documents you can show the client", p:"Brief, acceptance criteria (what the client will accept the work by), test plan, project handover, proposal with estimate, and change request."},
+    {m:"3 add-ons", t:"For your type of project", p:"Extra rules and check scripts for landing pages, automations and data work. Optional."}
+  ],
+  howEyebrow:"How it works", howTitle:"Brief, plan, check",
+  howLead:"Five stages in all: understand the order, make a plan, build, check, hand over to the client. The three main steps look like this.",
+  steps:[
+    {n:"Step 1 · /intake", t:"Brief", p:"You pass the client's message as it is. You get questions for the client and numbered points the work will be accepted by. Anything you do not know is written down as an assumption, not as a fact.", o:"docs/brief.md"},
+    {n:"Step 2 · /plan-delivery", t:"Plan", p:"From the approved brief Claude writes a plan: stages, risks, recurring costs. Then it stops and waits for you to approve it.", o:"docs/plan.md"},
+    {n:"Step 3 · /qa-gate", t:"Check before handover", p:"Every point gets a mark with evidence: passed, failed or not verified. The result is READY, READY WITH CAVEATS or NOT READY.", o:"docs/qa-report.md"}
+  ],
+  getEyebrow:"Right after purchase", getTitle:"What you get",
+  get:[
+    "A .claude/ folder with project rules, settings, three commands, the reviewing helper and the safety-catch hooks",
+    "A templates/ folder with six document templates",
+    "A packs/ folder with three add-ons, checklists, check scripts and tests",
+    "A 74-page guide: setup, a one-page cheat sheet, answers to common questions",
+    "A full worked example: a yoga studio landing page from order to final verdict",
+    "License: use in your own projects, personal and commercial"
+  ],
+  getNote:"Access to Claude Code itself is not included; you arrange it separately. The hooks need the Python 3 program. Reselling the kit is not allowed.",
+  whoEyebrow:"Who it is for", whoTitle:"Who will find it useful",
+  who:[
+    {t:"Freelancers", p:"You take paid orders and want each one to follow the same routine. The client gets a brief, a plan, a check report and a handover document, and the \"what did we agree on\" argument is settled by a document."},
+    {t:"Developers", p:"You already work with Claude Code and want rules and protection enforced by scripts, not by persuading the model. Commands are not tied to a stack, and templates can be edited."},
+    {t:"People who do not write code", p:"The brief, plan and report are ordinary documents you can read without knowing code. But the kit runs inside Claude Code and you set it up yourself. If you have never launched it, the kit is a bit early for you."}
+  ],
+  priceEyebrow:"Price", priceTitle:"One kit, one price",
+  priceNow:"990 RUB", priceOld:"1500 RUB", priceBadge:"Limited-time discount",
+  priceList:["All kit files and the guide","Use in your own projects","A single option, no tiers"],
+  priceNote:"Payment and terms are in the Telegram bot",
+  faqEyebrow:"Questions", faqTitle:"Frequently asked questions",
+  faq:[
+    {q:"Do I need Claude Code?", a:"Yes. It is an AI assistant that runs on your computer, and the kit works only inside it. Access or a subscription is arranged separately. The hooks also need the Python 3 program."},
+    {q:"Can I use the kit in commercial projects?", a:"Yes, in your own projects. Reselling the kit itself is not allowed."},
+    {q:"Does it fit projects without code?", a:"Understanding the order, planning and handover fit any project. The check works best where the result can be verified."},
+    {q:"Can I adapt the kit to my needs?", a:"Yes. Commands are not tied to specific languages or tools: add your own to the CLAUDE.md file (project rules) and edit the templates."},
+    {q:"Is this an AI that builds the whole project by itself?", a:"No. You and the client approve the plan and the acceptance. Claude proposes, checks and writes things down. The kit does not promise income: it helps make your work clear, repeatable and verifiable, and only if this way of working suits you."}
+  ],
+  footVersion:"· Guide and file kit, version 1.0", footAccount:"Account:"
+}
+};
+
+let lang = "ru";
+try { const s = localStorage.getItem("lang"); if (s === "ru" || s === "en") lang = s; } catch (e) {}
+
+const $ = (s) => document.querySelector(s);
+function el(tag, cls, html){ const e = document.createElement(tag); if (cls) e.className = cls; if (html) e.innerHTML = html; return e; }
+function esc(s){ return String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
+
+function render(){
+  const d = I18N[lang];
+  document.documentElement.lang = d.htmlLang;
+  document.title = d.pageTitle;
+  $('meta[name="description"]').setAttribute("content", d.metaDesc);
+  document.querySelectorAll("[data-i18n]").forEach(n => { n.textContent = d[n.dataset.i18n]; });
+  document.querySelectorAll("[data-i18n-alt]").forEach(n => { n.alt = d[n.dataset.i18nAlt]; });
+  const btn = $("#lang"); btn.textContent = d.langBtn; btn.setAttribute("aria-label", d.langLabel);
+
+  const fill = (sel, items, build) => { const box = $(sel); box.innerHTML = ""; items.forEach((it, i) => { const n = build(it, i); n.classList.add("reveal"); n.style.setProperty("--d", (i * 0.08) + "s"); box.appendChild(n); }); };
+  fill("#pain", d.pain, x => el("article","card","<h3>"+esc(x.t)+"</h3><p>"+esc(x.p)+"</p>"));
+  fill("#features", d.features, x => el("article","card",'<span class="mono">'+esc(x.m)+"</span><h3>"+esc(x.t)+"</h3><p>"+esc(x.p)+"</p>"));
+  fill("#steps", d.steps, x => el("li","",'<span class="n">'+esc(x.n)+"</span><h3>"+esc(x.t)+"</h3><p>"+esc(x.p)+'</p><code class="mono out">→ '+esc(x.o)+"</code>"));
+  fill("#who", d.who, x => el("article","card","<h3>"+esc(x.t)+"</h3><p>"+esc(x.p)+"</p>"));
+  const g = $("#get"); g.innerHTML = ""; d.get.forEach(t => g.appendChild(el("li","",esc(t))));
+  const pl = $("#priceList"); pl.innerHTML = ""; d.priceList.forEach(t => pl.appendChild(el("li","",esc(t))));
+  const f = $("#faq"); f.innerHTML = ""; d.faq.forEach(x => f.appendChild(el("details","","<summary>"+esc(x.q)+"</summary><p>"+esc(x.a)+"</p>")));
+  observe();
+}
+
+let io = null;
+function observe(){
+  const nodes = document.querySelectorAll(".reveal:not(.in)");
+  if (!("IntersectionObserver" in window)) { nodes.forEach(n => n.classList.add("in")); return; }
+  if (!io) io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting){ e.target.classList.add("in"); io.unobserve(e.target); } }), {threshold:0.12, rootMargin:"0px 0px -5% 0px"});
+  nodes.forEach(n => io.observe(n));
+}
+
+document.querySelectorAll(".js-cta").forEach(a => { a.href = PAYMENT_URL; });
+$("#lang").addEventListener("click", () => {
+  lang = lang === "ru" ? "en" : "ru";
+  try { localStorage.setItem("lang", lang); } catch (e) {}
+  render(); startTyping(true);
+});
+
+/* Typing effect: shows the three real commands of the kit, once on load. No stats. */
+let typeTimer = null;
+function startTyping(instant){
+  const out = $("#typed"); const txt = I18N[lang].typed;
+  clearTimeout(typeTimer);
+  if (instant || matchMedia("(prefers-reduced-motion: reduce)").matches){ out.textContent = txt; return; }
+  let i = 0; out.textContent = "";
+  (function step(){ out.textContent = txt.slice(0, ++i); if (i < txt.length) typeTimer = setTimeout(step, 55); })();
+}
+
+render();
+startTyping(false);
+</script>
+</body>
+</html>
